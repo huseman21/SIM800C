@@ -3,13 +3,16 @@
 
 
 
-<img width="1600" height="1600" alt="sim800c" src="https://github.com/user-attachments/assets/5e361cc0-a5ad-4308-9008-102012de3010" />
+<img width="500" height="500" alt="sim800c" src="https://github.com/user-attachments/assets/5e361cc0-a5ad-4308-9008-102012de3010" />
 
 
 A Powershell script demonstrating how to use the SIMCom SIM800C GSM/GPRS module
 
 GSM/GPRS Module
 The SIM800C is a Quad-Band GSM/GPRS module in a LCC type which supports GPRS up to 85.6kbps data transfer. It has strong extension capability with abundant interfaces including UART, USB2.0, GPIO etc. The module provides much flexibility and ease of integration for customer's applications.
+
+![screenshot](https://github.com/user-attachments/assets/0bf43392-536a-450e-b5f6-c0a598020acf)
+
 
 Product Details
 General features
