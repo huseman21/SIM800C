@@ -1,5 +1,11 @@
 # SIM800C
 
+
+
+
+<img width="1600" height="1600" alt="sim800c" src="https://github.com/user-attachments/assets/5e361cc0-a5ad-4308-9008-102012de3010" />
+
+
 A Powershell script demonstrating how to use the SIMCom SIM800C GSM/GPRS module
 
 GSM/GPRS Module
