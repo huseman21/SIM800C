@@ -1,14 +1,13 @@
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
-# ====================================================================================
-# SCRIPT-WIDE VARIABLES & VISUAL STYLES
+# SCRIPT-WIDE VARIABLES
 # ====================================================================================
 $script:baudRate = 115200
 $script:serialPort = $null
 $script:timeout = 10000 
 
-# --- DARK MODE COLOR PALETTE (Script-Scoped for access in event handlers) ---
+# --- DARK MODE COLOR (Script-Scoped for access in event handlers) ---
 $script:color_Background = [System.Drawing.ColorTranslator]::FromHtml("#1E1E1E") # Main Form Background
 $script:color_Panel = [System.Drawing.ColorTranslator]::FromHtml("#2D2D30")      # Group Box Background (Original Status BG)
 $script:color_Text = [System.Drawing.ColorTranslator]::FromHtml("#DCDCDC")       # Light Text (Original Status FG)
@@ -21,15 +20,15 @@ $script:color_FlashAccent = [System.Drawing.ColorTranslator]::FromHtml("#00FF7F"
 $signalTimer = New-Object System.Windows.Forms.Timer
 $signalTimer.Interval = 10000 # Poll every 10 seconds
 
-# --- Anchor Constants ---
+# --- Anchor ---
 $anchorLeftRight = [System.Windows.Forms.AnchorStyles]::Left -bor [System.Windows.Forms.AnchorStyles]::Right
 $anchorTopLeft = [System.Windows.Forms.AnchorStyles]::Top -bor [System.Windows.Forms.AnchorStyles]::Left
 $anchorTopRight = [System.Windows.Forms.AnchorStyles]::Top -bor [System.Windows.Forms.AnchorStyles]::Right
 $anchorLeftRightTop = [System.Windows.Forms.AnchorStyles]::Left -bor [System.Windows.Forms.AnchorStyles]::Right -bor [System.Windows.Forms.AnchorStyles]::Top
 $anchorAll = [System.Windows.Forms.AnchorStyles]::Left -bor [System.Windows.Forms.AnchorStyles]::Top -bor [System.Windows.Forms.AnchorStyles]::Right -bor [System.Windows.Forms.AnchorStyles]::Bottom
 
-# ====================================================================================
-# LOGGING AND VISUAL FEEDBACK FUNCTIONS (UPDATED)
+
+# LOGGING AND VISUAL FEEDBACK 
 # ====================================================================================
 function Log-Output {
     param([string]$Message)
@@ -72,8 +71,8 @@ function Flash-Status {
     $flashTimer.Enabled = $true
 }
 
-# ====================================================================================
-# SERIAL COMMUNICATION FUNCTIONS
+
+# SERIAL
 # ====================================================================================
 function Open-Port {
     param ([string]$PortName)
@@ -123,7 +122,6 @@ function Open-Port {
         # *** STATUS UPDATE: OFF ***
         $connectionIndicator.BackColor = [System.Drawing.Color]::Red
         $connectionIndicator.Text = "OFFLINE"
-        # *************************
         return $false
     }
 }
@@ -267,8 +265,7 @@ function Wait-ForHttpAction {
     }
 }
 
-# ------------------------------------------------------------------------------------
-# *** VISUAL SIGNAL STATUS LOGIC ***
+# *** VISUAL LOGIC ***
 # ------------------------------------------------------------------------------------
 function Update-SignalStatus {
     # Check for open port explicitly, though the timer should be disabled on disconnect.
@@ -347,8 +344,7 @@ function Send-CustomCommand {
     }
 }
 
-# ====================================================================================
-# FORM CREATION AND LAYOUT
+# FORM 
 # ====================================================================================
 
 # --- Main Form ---
@@ -469,7 +465,6 @@ $outputTextBox.Font = New-Object System.Drawing.Font("Consolas", 10); $outputTex
 $outputGroupBox.Controls.Add($outputTextBox)
 $form.Controls.Add($outputGroupBox)
 
-# ------------------------------------------------------------------------------------
 # --- Column 2 (Right Side) ---
 # ------------------------------------------------------------------------------------
 $currentY = 15
@@ -489,7 +484,7 @@ $form.Add_Resize({
     $outputGroupBox.Width = $c1Width
 })
 
-# --- Apply dark theme to a button (Helper function for brevity)
+# --- Apply dark theme 
 function Style-Button {
     param($button, $useAccent = $false)
     $button.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
@@ -498,7 +493,7 @@ function Style-Button {
     if ($useAccent) { $button.ForeColor = [System.Drawing.Color]::White }
 }
 
-# --- 1. SMS and Calls Panel ---
+# --- 1. SMS and Calls  ---
 $smsGroupBox = New-Object System.Windows.Forms.GroupBox; $smsGroupBox.Text = "1. SMS and Calls"; $smsGroupBox.Size = New-Object System.Drawing.Size($c2Width, 210) 
 $smsGroupBox.Location = New-Object System.Drawing.Size($c2X, $currentY); $smsGroupBox.Anchor = $anchorTopRight; $smsGroupBox.Enabled = $false
 $smsGroupBox.BackColor = $script:color_Panel; $smsGroupBox.ForeColor = $script:color_Text
@@ -662,7 +657,7 @@ $form.Controls.Add($extGroupBox)
 
 $currentY += $extGroupBox.Height + 10
 
-# --- 4. Bluetooth Control Panel ---
+# --- 4. Bluetooth Panel ---
 $btGroupBox = New-Object System.Windows.Forms.GroupBox; $btGroupBox.Text = "4. Bluetooth Control (Diagnostics & Scan)"; $btGroupBox.Size = New-Object System.Drawing.Size($c2Width, 180) 
 $btGroupBox.Location = New-Object System.Drawing.Size($c2X, $currentY); $btGroupBox.Anchor = $anchorTopRight; $btGroupBox.Enabled = $false
 $btGroupBox.BackColor = $script:color_Panel; $btGroupBox.ForeColor = $script:color_Text
@@ -704,11 +699,12 @@ $btGroupBox.Controls.Add($btMacLabel); $btGroupBox.Controls.Add($btMacTextBox); 
 $form.Controls.Add($btGroupBox)
 
 
-# --- Finalization ---
+# --- END ---
 $form.Add_Closing({
     if ($script:serialPort -and $script:serialPort.IsOpen) { Close-Port }
     $signalTimer.Dispose()
 })
 
 $form.PerformLayout()
+
 [void]$form.ShowDialog()
